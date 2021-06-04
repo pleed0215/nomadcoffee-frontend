@@ -1,7 +1,8 @@
-import { ok } from 'assert'
+
 import gql from 'graphql-tag'
 import React from 'react'
 
+import styled, {keyframes} from "styled-components";
 
 const MUTATION_CREATE_ACCOUNT = gql`    
     mutation CreateAccount(
@@ -41,6 +42,38 @@ type AuthPageProps = {
     isCreating: boolean;
 }
 
+const Container= styled.div`
+    width: 100vw;
+    min-height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url('/intro.jpg');
+
+    display: flex;
+    justify-content: center;    
+`;
+
+const topToBototm = keyframes`
+    from {
+        color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-70px);
+    }
+    to {
+        color: rgba(255, 255, 255, 1.0);
+        transform: translateY(0px);
+    }
+`;
+
+const Title = styled.h1`
+    margin-top: 200px;
+    font-family: LuckiestGuy;
+    font-size: 4rem;
+    color: white;
+    letter-spacing: 0.4rem;
+    animation: ${topToBototm} 0.5s linear;
+`;
+
 export const AuthPage:React.FC<AuthPageProps> = () => {
-    return <div><p>횐님, 횐 가입하셨음까?</p></div>
+    return <Container><Title>Nomad Coffee</Title></Container>
 }
