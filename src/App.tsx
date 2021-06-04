@@ -1,25 +1,40 @@
+import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { HelmetProvider } from 'react-helmet-async';
+import { apolloClient } from './apollo/client';
+import styled, { ThemeProvider } from "styled-components"
+import { darkModeVar, isLoggedInVar } from './apollo/vars';
+import { darkTheme, lightTheme } from './theme/theme';
+import { GlobalStyles } from './components/GlobalStyles';
+import { LoggedInRouter } from './router/logged.in';
+import { LoggedOutRouter } from './router/logged.out';
+
+const Container = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${(props) => props.theme.background.primary};
+  color: ${(props) => props.theme.color.primary};
+  transition: background-color 0.4s;
+`;
 
 function App() {
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
+  const isDarkMode = useReactiveVar(darkModeVar);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={apolloClient}>
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <HelmetProvider>
+        <GlobalStyles/>
+    <Container>
+      {isLoggedIn ? <LoggedInRouter/>:<LoggedOutRouter/>}
+    </Container>
+    </HelmetProvider>
+    </ThemeProvider>
+    </ApolloProvider>
   );
 }
 
