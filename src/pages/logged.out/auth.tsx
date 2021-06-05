@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import React from "react";
 
 import styled, { keyframes } from "styled-components";
+import { ReactComponent as CoffeeBean } from "../../assets/bean.svg";
 
 const MUTATION_CREATE_ACCOUNT = gql`
   mutation CreateAccount(
@@ -75,7 +76,21 @@ const Title = styled.h1`
 export const AuthPage: React.FC<AuthPageProps> = () => {
   return (
     <Container>
-      <Title>Nomad Coffee</Title>
+      <Title>
+        <CoffeeBean
+          width="40"
+          height="40"
+          fill="#ffffff"
+          style={{ marginRight: 10 }}
+        />
+        Nomad Coffee
+        <CoffeeBean
+          width="40"
+          height="40"
+          fill="#ffffff"
+          style={{ marginLeft: 10 }}
+        />
+      </Title>
     </Container>
   );
 };
