@@ -7,12 +7,9 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { authTokenVar } from "./vars";
 import { createUploadLink } from "apollo-upload-client";
 
-const HTTP_ENDPOINT = `https://forkstar.herokuapp.com/graphql`;
-const WS_ENDPOINT = `wss://forkstar.herokuapp.com/graphql`;
-//const HTTP_ENDPOINT = `http://localhost:4000/graphql`;
-//const WS_ENDPOINT = `ws://localhost:4000/graphql`;
+const HTTP_ENDPOINT = `https://nomadcoffee.herokuapp.com/graphql`;
+const WS_ENDPOINT = `wss://nomadcoffee.herokuapp.com/graphql`;
 
-//const httpLink = createHttpLink({ uri: HTTP_ENDPOINT });
 const uploadLink = createUploadLink({ uri: HTTP_ENDPOINT });
 
 const wsLink = new WebSocketLink({
@@ -56,5 +53,5 @@ const splitLink = split(
 
 export const apolloClient = new ApolloClient({
   link: splitLink,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
