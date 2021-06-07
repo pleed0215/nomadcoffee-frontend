@@ -49,10 +49,12 @@ const MUTATION_LOGIN = gql`
   }
 `;
 
+// AuthPage 컴포넌트 props.
 type AuthPageProps = {
   isCreating?: boolean;
 };
 
+// react-hook-form에서 사용할 변수들.
 type IAuthForm = {
   username: string;
   email: string;
@@ -60,6 +62,8 @@ type IAuthForm = {
   password2: string;
 };
 
+// styled-components 애니메이션 사용 위해..
+// 위에서 떨어지는 애니메이션, 단순하게 내려오기만 함.
 const topToBototm = keyframes`
     from {
         color: rgba(255, 255, 255, 0.2);
@@ -71,11 +75,13 @@ const topToBototm = keyframes`
     }
 `;
 
+// fade in 애니메이션.
 const fadeIn = keyframes`
   0% {
     opacity: 0;
   }
 
+  // 조금 시차를 주려고..
   50% {
     opacity: 0;
   }
@@ -84,6 +90,7 @@ const fadeIn = keyframes`
   }
 `;
 
+// 가장 외부 박스..
 const Container = styled.div`
   width: 100vw;
   min-height: 100vh;
@@ -97,6 +104,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+// InputBox 위에 호출되어 타이틀을 넣음.
 const InputBoxCap = styled.div`
   width: 100%;
   height: 60px;
@@ -105,6 +113,8 @@ const InputBoxCap = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+// isCreating에 따라 높이 달리..
 const InputBox = styled.div<{ isCreating?: boolean }>`
   display: flex;
   flex-direction: column;
