@@ -101,6 +101,7 @@ const Container = styled.div`
 
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
 `;
 
@@ -130,7 +131,6 @@ const InputBox = styled.div<{ isCreating?: boolean }>`
 `;
 
 const Title = styled.h1`
-  margin-top: 150px;
   font-family: LuckiestGuy;
   font-size: 3rem;
   color: white;
