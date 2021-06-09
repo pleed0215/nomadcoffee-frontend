@@ -5,49 +5,17 @@ import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 
 import styled, { keyframes } from "styled-components";
-import { makeLogin } from "../../apollo/vars";
+import { darkModeVar, makeLogin } from "../../apollo/vars";
 import { ReactComponent as CoffeeBean } from "../../assets/bean.svg";
 import {
   CreateAccount,
   CreateAccountVariables,
 } from "../../codegen/CreateAccount";
+import { MUTATION_CREATE_ACCOUNT, MUTATION_LOGIN } from "../../apollo/queries";
 import { Login, LoginVariables } from "../../codegen/Login";
 import { ButtonInactivable } from "../../components/ButtonInactivable";
 import { ControlledInput } from "../../components/ControlledInput";
 import { HelmetOnlyTitle } from "../../components/HelmetOnlyTitle";
-
-const MUTATION_CREATE_ACCOUNT = gql`
-  mutation CreateAccount(
-    $username: String!
-    $email: String!
-    $name: String
-    $password: String!
-    $location: String
-    $githubUsername: String
-  ) {
-    createAccount(
-      username: $username
-      email: $email
-      name: $name
-      password: $password
-      location: $location
-      githubUsername: $githubUsername
-    ) {
-      ok
-      error
-    }
-  }
-`;
-
-const MUTATION_LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      ok
-      error
-      token
-    }
-  }
-`;
 
 // AuthPage 컴포넌트 props.
 type AuthPageProps = {
@@ -123,7 +91,9 @@ const InputBox = styled.div<{ isCreating?: boolean }>`
   min-width: 350px;
   max-width: 450px;
   min-height: ${(props) => (props.isCreating ? "490px" : "350px")};
-  background-color: rgba(240, 240, 240, 0.8);
+  background-color: ${darkModeVar()
+    ? "rgba(100, 100, 100, 0.8)"
+    : "rgba(240, 240, 240, 0.8)"};
   animation: ${fadeIn} 0.9s linear;
   margin-top: 24px;
   border-radius: 10px;

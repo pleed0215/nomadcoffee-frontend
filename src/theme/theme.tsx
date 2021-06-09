@@ -2,17 +2,17 @@ import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
   color: {
-    primary: "black",
-    secondary: "rgb(96,96, 96)",
-    border: "rgb(219,219,219)",
+    primary: "#6f4e37",
+    secondary: "#efefef",
+    border: "#374b6f",
     link: "#0095f6",
     button: "white",
     like: "#ED4956",
   },
   background: {
     primary: "#fafafa",
-    secondary: "white",
-    button: "#4795f6",
+    secondary: "#6f4e37",
+    button: "#6f4e37",
     avatar: "#dbdbdb",
   },
 };

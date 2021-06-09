@@ -3,7 +3,9 @@ import styled from "styled-components";
 
 import { Header } from "../components/Header";
 import { NotFoundPage } from "../pages/404";
+import { AddOrEditPage } from "../pages/logged.in/add";
 import { HomePage } from "../pages/logged.in/home";
+import { SeeCafePage } from "../pages/logged.in/shop";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -21,10 +23,16 @@ export const LoggedInRouter = () => {
     <Router>
       <Header />
       <Container>
-        <Switch>ㄴ
+        <Switch>
           <Route path="/" exact>
             <HomePage />
-          </Route>          
+          </Route>
+          <Route path="/add" exact>
+            <AddOrEditPage />
+          </Route>
+          <Route path="/shop/:id" exact>
+            <SeeCafePage />
+          </Route>
           <Route>
             <NotFoundPage />
           </Route>

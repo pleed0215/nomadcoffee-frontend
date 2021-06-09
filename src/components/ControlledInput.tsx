@@ -32,7 +32,7 @@ type ControlledInputProps<
 const Input = styled.input<{ isError?: boolean }>`
   border: 1px solid
     ${(props) => (props.isError === true ? "red" : props.theme.color.border)};
-  background-color: ${(props) => props.theme.background.secondary};
+  background-color: ${(props) => props.theme.background.primary};
   color: ${(props) => props.theme.color.primary};
   border-radius: 4px;
   width: 100%;

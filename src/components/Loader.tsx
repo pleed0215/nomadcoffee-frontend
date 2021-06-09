@@ -10,6 +10,14 @@ const animationSpin = keyframes`
     }
 `;
 
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const SpinLoader = styled.div`
   width: 20px;
   height: 20px;
@@ -22,4 +30,12 @@ const SpinLoader = styled.div`
 
 export const Loader: React.FC = () => {
   return <SpinLoader />;
+};
+
+export const PageLoader: React.FC = () => {
+  return (
+    <Container>
+      <Loader />
+    </Container>
+  );
 };
