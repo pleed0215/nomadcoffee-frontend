@@ -13,11 +13,16 @@ import {
   MUTATION_CREATE_SHOP,
   MUTATION_DELETE_SHOP,
   MUTATION_EDIT_SHOP,
+  MUTATION_REMOVE_CATEGORY_FROM_SHOP,
   QUERY_SHOPS,
 } from "../../apollo/queries";
-import { AllShop } from "../../codegen/AllShop";
+import { AllShop, AllShop_categories } from "../../codegen/AllShop";
 import { DeleteShop, DeleteShopVariables } from "../../codegen/DeleteShop";
 import { EditShop, EditShopVariables } from "../../codegen/EditShop";
+import {
+  RemoveCategory,
+  RemoveCategoryVariables,
+} from "../../codegen/RemoveCategory";
 
 const Container = styled(LayoutContainer)`
   flex-direction: column;
@@ -210,6 +215,9 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
       },
     }
   );
+  const [removeCategory] = useMutation<RemoveCategory, RemoveCategoryVariables>(
+    MUTATION_REMOVE_CATEGORY_FROM_SHOP
+  );
 
   //@ts-ignore
   const kakao = window.kakao;
@@ -330,6 +338,31 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
   };
 
   const onRevmoeCategory = (text: string) => (e: React.MouseEvent) => {
+    if (editing) {
+      removeCategory({
+        variables: {
+          id: shop?.id!,
+          slug: text,
+        },
+        update: (caches, result) => {
+          caches.modify({
+            id: `CoffeeShop:${shop?.id}`,
+            fields: {
+              categories: (prev: AllShop_categories[]) => {
+                if (result.data?.removeCategoryFromShop.ok) {
+                  const safePrev = prev ? prev.slice(0) : [];
+                  const index = safePrev.findIndex((cat) => cat.slug === text);
+                  if (index !== -1) {
+                    safePrev.splice(index, 1);
+                  }
+                  return safePrev;
+                }
+              },
+            },
+          });
+        },
+      });
+    }
     const index = categories.findIndex((value) => value === text);
     if (index !== -1) {
       categories.splice(index, 1);
