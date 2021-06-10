@@ -12,10 +12,12 @@ import { ButtonInactivable } from "../../components/ButtonInactivable";
 import {
   MUTATION_CREATE_SHOP,
   MUTATION_DELETE_SHOP,
+  MUTATION_EDIT_SHOP,
   QUERY_SHOPS,
 } from "../../apollo/queries";
 import { AllShop } from "../../codegen/AllShop";
 import { DeleteShop, DeleteShopVariables } from "../../codegen/DeleteShop";
+import { EditShop, EditShopVariables } from "../../codegen/EditShop";
 
 const Container = styled(LayoutContainer)`
   flex-direction: column;
@@ -123,6 +125,14 @@ const ErrorMsg = styled.span`
   margin-top: 4px;
 `;
 
+const DeleteButton = styled.button`
+  background-color: #ce3333;
+  color: white;
+  width: 100%;
+  height: 32px;
+  border-radius: 3px;
+`;
+
 type AddOrEditProp = {
   editing?: boolean;
   shop?: AllShop;
@@ -187,6 +197,19 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
       ],
     }
   );
+  const [editShop] = useMutation<EditShop, EditShopVariables>(
+    MUTATION_EDIT_SHOP,
+    {
+      onCompleted: (data) => {
+        if (data.editCoffeeShop.ok) {
+          alert("변경사항이 저장되었습니다.");
+          history.push("/");
+        } else {
+          alert("업데이트에 실패했습니다.");
+        }
+      },
+    }
+  );
 
   //@ts-ignore
   const kakao = window.kakao;
@@ -218,22 +241,34 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     setErrMessages([]);
     if (checkValid()) {
       setLoading(true);
-      createShop({
-        variables: {
-          name,
-          address: realAddress?.address!,
-          lat: +realAddress?.lat!,
-          lng: +realAddress?.lng!,
-          //@ts-ignore
-          photos: fileList!,
-          categories,
-        },
-        refetchQueries: [
-          {
-            query: QUERY_SHOPS,
+      if (editing) {
+        editShop({
+          variables: {
+            id: shop?.id!,
+            name,
+            address: realAddress?.address!,
+            lat: +realAddress?.lat!,
+            lng: +realAddress?.lng!,
           },
-        ],
-      });
+        });
+      } else {
+        createShop({
+          variables: {
+            name,
+            address: realAddress?.address!,
+            lat: +realAddress?.lat!,
+            lng: +realAddress?.lng!,
+            //@ts-ignore
+            photos: fileList!,
+            categories,
+          },
+          refetchQueries: [
+            {
+              query: QUERY_SHOPS,
+            },
+          ],
+        });
+      }
     }
   };
 
@@ -374,7 +409,7 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
 
   return (
     <Container>
-      <HelmetOnlyTitle title="카페 만들기" />
+      <HelmetOnlyTitle title={editing ? "카페 편집" : "카페 만들기"} />
       <Title>커피샵 만들기</Title>
       <StepText>1. 이름 정하기</StepText>
       <Input
@@ -455,19 +490,13 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
       </PhotosContainer>
       <div style={{ marginTop: 8, marginBottom: 8, display: "flex" }}>
         <ButtonInactivable loading={loading} isActivate onClick={onCreateClick}>
-          만들기
+          {editing ? "저장하기" : "만들기"}
         </ButtonInactivable>
-        <div style={{ marginLeft: 16, width: "100%" }}>
-          {editing && shop && (
-            <ButtonInactivable
-              loading={false}
-              isActivate
-              onClick={onDeleteClick}
-            >
-              삭제하기
-            </ButtonInactivable>
-          )}
-        </div>
+        {editing && shop && (
+          <div style={{ marginLeft: 16, width: "100%" }}>
+            <DeleteButton onClick={onDeleteClick}>삭제하기</DeleteButton>
+          </div>
+        )}
       </div>
       <div style={{ marginTop: 8, marginBottom: 8 }} />
       {errMessages.length > 0 &&

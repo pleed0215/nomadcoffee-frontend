@@ -83,3 +83,42 @@ export const MUTATION_DELETE_SHOP = gql`
     }
   }
 `;
+
+export const MUTATION_EDIT_SHOP = gql`
+  mutation EditShop(
+    $id: Int!
+    $name: String
+    $address: String
+    $lat: Float
+    $lng: Float
+  ) {
+    editCoffeeShop(
+      id: $id
+      name: $name
+      address: $address
+      lat: $lat
+      lng: $lng
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
+export const MUTATION_ADD_CATEGORY_TO_SHOP = gql`
+  mutation AddCategory($id: Int!, $categories: [String]!) {
+    addCategoriesToShop(id: $id, categories: $categories) {
+      ok
+      error
+    }
+  }
+`;
+
+export const MUTATION_REMOVE_CATEGORY_FROM_SHOP = gql`
+  mutation RemoveCategory($id: Int!, $slug: String!) {
+    removeCategoryFromShop(id: $id, slug: $slug) {
+      ok
+      error
+    }
+  }
+`;
