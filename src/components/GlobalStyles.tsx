@@ -6,13 +6,14 @@ export const GlobalStyles = createGlobalStyle`
         font-family: "LuckiestGuy";
         font-style: normal;
         font-weight: normal;
-        src: url('fonts/LuckiestGuy-Regular.ttf') format("truetype");
+        src: url('/fonts/LuckiestGuy-Regular.ttf') format("truetype");
     }
     @font-face {
         font-family: "DoHyun";
         font-style: normal;
         font-weight: normal;
-        src: url('fonts/DoHyeon-Regular.ttf') format("truetype");
+        src: url('/fonts/DoHyeon-Regular.ttf') format("truetype"),
+             url('/fonts/DoHyeon-Regular.woff') format("woff");
     }
     
     ${reset}

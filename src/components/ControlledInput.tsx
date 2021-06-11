@@ -42,7 +42,7 @@ const Input = styled.input<{ isError?: boolean }>`
 
 const Label = styled.label`
   font-size: 1rem;
-  color: ${(props) => props.theme.color.primary};
+  color: ${(props) => props.theme.color.secondary};
   margin-bottom: 4px;
 `;
 

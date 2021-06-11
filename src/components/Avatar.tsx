@@ -76,6 +76,7 @@ interface AvatarAndUsernameProp extends AvatarProps {
   username: string;
   email?: string;
   textColor: string;
+  id: number;
 }
 const PhotoItemHeader = styled.div`
   display: flex;
@@ -105,6 +106,7 @@ const PhotoItemHeaderName = styled.span`
 
 export const AvatarAndUsername: React.FC<AvatarAndUsernameProp> = ({
   url,
+  id,
   username,
   email,
   linkable,
@@ -112,10 +114,7 @@ export const AvatarAndUsername: React.FC<AvatarAndUsernameProp> = ({
 }) => {
   return linkable ? (
     <PhotoItemHeader>
-      <Link
-        to={`/users/${username}`}
-        style={{ display: "flex", color: "inherit" }}
-      >
+      <Link to={`/users/${id}`} style={{ display: "flex", color: "inherit" }}>
         <Avatar url={url} size="lg" />
         <PhotoItemHeaderUserInfo>
           <PhotoItemHeaderUsername color={textColor}>

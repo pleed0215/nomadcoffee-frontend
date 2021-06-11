@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import gql from "graphql-tag";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
@@ -92,7 +91,7 @@ const InputBox = styled.div<{ isCreating?: boolean }>`
   max-width: 450px;
   min-height: ${(props) => (props.isCreating ? "490px" : "350px")};
   background-color: ${darkModeVar()
-    ? "rgba(100, 100, 100, 0.8)"
+    ? "rgba(140, 140, 140, 0.8)"
     : "rgba(240, 240, 240, 0.8)"};
   animation: ${fadeIn} 0.9s linear;
   margin-top: 24px;

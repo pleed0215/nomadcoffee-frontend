@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { useMutation } from "@apollo/client";
+import { faTimesCircle, faTimes } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { LayoutContainer } from "../../components/LayoutContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,19 +10,23 @@ import { CreateShop, CreateShopVariables } from "../../codegen/CreateShop";
 import { useHistory } from "react-router";
 import { ButtonInactivable } from "../../components/ButtonInactivable";
 import {
+  MUTATION_ADD_CATEGORY_TO_SHOP,
   MUTATION_CREATE_SHOP,
   MUTATION_DELETE_SHOP,
   MUTATION_EDIT_SHOP,
   MUTATION_REMOVE_CATEGORY_FROM_SHOP,
+  MUTATION_REMOVE_PHOTO_FROM_SHOP,
   QUERY_SHOPS,
 } from "../../apollo/queries";
-import { AllShop, AllShop_categories } from "../../codegen/AllShop";
+import { AllShop } from "../../codegen/AllShop";
 import { DeleteShop, DeleteShopVariables } from "../../codegen/DeleteShop";
 import { EditShop, EditShopVariables } from "../../codegen/EditShop";
 import {
   RemoveCategory,
   RemoveCategoryVariables,
 } from "../../codegen/RemoveCategory";
+import { AddCategory, AddCategoryVariables } from "../../codegen/AddCategory";
+import { RemovePhoto, RemovePhotoVariables } from "../../codegen/RemovePhoto";
 
 const Container = styled(LayoutContainer)`
   flex-direction: column;
@@ -111,6 +115,8 @@ const PhotosContainer = styled.div`
   border-radius: 8px;
   display: flex;
   align-items: center;
+  margin-top: 4px;
+  margin-bottom: 4px;
 `;
 
 const PhotoFile = styled.div`
@@ -120,6 +126,35 @@ const PhotoFile = styled.div`
   background-position: center center;
   &:not(:last-child) {
     margin-right: 10px;
+  }
+`;
+
+const UploadedPhotoFile = styled.div`
+  width: 130px;
+  height: 130px;
+  background-size: cover;
+  background-position: center center;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+  position: relative;
+`;
+
+const PhotoDeleteIcon = styled.div`
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  color: ${(props) => props.theme.color.secondary};
+  background-color: ${(props) => props.theme.background.secondary};
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: yellowgreen;
   }
 `;
 
@@ -154,7 +189,7 @@ type ImageInfo = {
 };
 
 export const AddOrEditPage: React.FC<AddOrEditProp> = ({
-  editing = true,
+  editing = false,
   shop,
 }) => {
   const history = useHistory();
@@ -215,8 +250,16 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
       },
     }
   );
+
+  const [addCategory] = useMutation<AddCategory, AddCategoryVariables>(
+    MUTATION_ADD_CATEGORY_TO_SHOP
+  );
   const [removeCategory] = useMutation<RemoveCategory, RemoveCategoryVariables>(
     MUTATION_REMOVE_CATEGORY_FROM_SHOP
+  );
+
+  const [deletePhoto] = useMutation<RemovePhoto, RemovePhotoVariables>(
+    MUTATION_REMOVE_PHOTO_FROM_SHOP
   );
 
   //@ts-ignore
@@ -249,14 +292,17 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     setErrMessages([]);
     if (checkValid()) {
       setLoading(true);
+      console.log("editing", editing);
       if (editing) {
         editShop({
+          // @ts-ignore
           variables: {
             id: shop?.id!,
             name,
             address: realAddress?.address!,
             lat: +realAddress?.lat!,
             lng: +realAddress?.lng!,
+            ...(fileList && fileList.length > 0 && { photos: fileList }),
           },
         });
       } else {
@@ -280,15 +326,73 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     }
   };
 
-  const onDeleteClick = () => {
-    if (shop) {
-      deleteShop({
-        variables: {
-          id: shop.id,
-        },
-      });
+  const onDeleteShopClick = () => {
+    if (shop && shop.id) {
+      if (window.confirm("정말 삭제하십니까?")) {
+        deleteShop({
+          variables: {
+            id: shop.id,
+          },
+          update: (cache, result) => {
+            if (result.data?.deleteCoffeeShop.ok) {
+              cache.modify({
+                id: `ROOT_QUERY`,
+                fields: {
+                  seeCoffeeShops: (prev: any) => {
+                    const safePrev = prev ? prev.slice(0) : [];
+                    const index = safePrev.findIndex(
+                      (shop: any) => shop.__ref === `CoffeeShop:${shop.id}`
+                    );
+                    if (index !== -1) {
+                      safePrev.splice(index, 1);
+                    }
+                    return safePrev;
+                  },
+                },
+              });
+            }
+          },
+        });
+      }
     }
   };
+
+  const onUploadedPhotoDeleteClick =
+    (photoId: number) => (_: React.MouseEvent) => {
+      if (editing && shop?.id) {
+        if (window.confirm("정말 삭제 합니까?")) {
+          deletePhoto({
+            variables: {
+              id: shop.id,
+              photoId,
+            },
+            update: (cache, result) => {
+              if (result.data?.removePhotoFromShop.ok) {
+                cache.modify({
+                  id: `CoffeeShop:${shop?.id}`,
+                  fields: {
+                    photos: (prev: any) => {
+                      const safePrev = prev ? prev.slice(0) : [];
+                      console.log(safePrev);
+                      const index = safePrev.map(
+                        (photo: any) =>
+                          photo.__ref === `CoffeeShopPhoto:${photoId}`
+                      );
+
+                      if (index !== -1) {
+                        safePrev.splice(index, 1);
+                      }
+                      console.log(safePrev);
+                      return safePrev;
+                    },
+                  },
+                });
+              }
+            },
+          });
+        }
+      }
+    };
 
   const onChange =
     (type: "name" | "address" | "category" | "photos") =>
@@ -315,6 +419,34 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
 
   const onKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "Enter") {
+      if (editing && shop?.id) {
+        addCategory({
+          variables: {
+            id: shop?.id,
+            categories: [category],
+          },
+          update: (caches, result) => {
+            caches.modify({
+              id: `CoffeeShop:${shop?.id}`,
+              fields: {
+                categories: (prev: any) => {
+                  if (result.data?.addCategoriesToShop.ok) {
+                    const safePrev = prev ? prev.slice(0) : [];
+                    const index = safePrev.findIndex(
+                      (cat: any) => cat.__ref === `Category:${category}`
+                    );
+                    if (index === -1) {
+                      return [...safePrev, category];
+                    } else {
+                      return safePrev;
+                    }
+                  }
+                },
+              },
+            });
+          },
+        });
+      }
       if (categories.findIndex((value) => value === category) === -1) {
         setCategories((prev) => [...prev, category]);
         setCategory("");
@@ -348,14 +480,16 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
           caches.modify({
             id: `CoffeeShop:${shop?.id}`,
             fields: {
-              categories: (prev: AllShop_categories[]) => {
+              categories: (prev: any) => {
                 if (result.data?.removeCategoryFromShop.ok) {
                   const safePrev = prev ? prev.slice(0) : [];
-                  const index = safePrev.findIndex((cat) => cat.slug === text);
+                  const index = safePrev.findIndex(
+                    (cat: any) => cat.__ref === `Category:${text}`
+                  );
                   if (index !== -1) {
                     safePrev.splice(index, 1);
                   }
-                  return safePrev;
+                  return [...safePrev];
                 }
               },
             },
@@ -418,9 +552,6 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
       if (cats) {
         setCategories(cats);
       }
-      if (shop.photos) {
-        setImages(shop.photos.map((photos) => ({ localUrl: photos?.url! })));
-      }
     }
   }, [editing, shop]);
 
@@ -465,9 +596,11 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
         {categories.map((cat) => (
           <CategoryContainer key={cat}>
             <CategoryText>{cat}</CategoryText>
-            <CategoryIcon onClick={onRevmoeCategory(cat)}>
-              <FontAwesomeIcon icon={faTimesCircle} />
-            </CategoryIcon>
+            {categories.length > 1 && (
+              <CategoryIcon onClick={onRevmoeCategory(cat)}>
+                <FontAwesomeIcon icon={faTimesCircle} />
+              </CategoryIcon>
+            )}
           </CategoryContainer>
         ))}
       </Categories>
@@ -521,13 +654,35 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
             />
           ))}
       </PhotosContainer>
+      {editing && shop?.photos && shop.photos.length > 0 && (
+        <>
+          <span>업로드 된 이미지</span>
+          <PhotosContainer>
+            {shop.photos.map((image, index) => (
+              <UploadedPhotoFile
+                key={`Photo:${image?.id}`}
+                style={{ backgroundImage: `url(${image?.url})` }}
+              >
+                {shop.photos && shop.photos.length > 1 && (
+                  <PhotoDeleteIcon
+                    onClick={onUploadedPhotoDeleteClick(image?.id!)}
+                  >
+                    <FontAwesomeIcon icon={faTimes} />
+                  </PhotoDeleteIcon>
+                )}
+              </UploadedPhotoFile>
+            ))}
+          </PhotosContainer>
+        </>
+      )}
+
       <div style={{ marginTop: 8, marginBottom: 8, display: "flex" }}>
         <ButtonInactivable loading={loading} isActivate onClick={onCreateClick}>
           {editing ? "저장하기" : "만들기"}
         </ButtonInactivable>
         {editing && shop && (
           <div style={{ marginLeft: 16, width: "100%" }}>
-            <DeleteButton onClick={onDeleteClick}>삭제하기</DeleteButton>
+            <DeleteButton onClick={onDeleteShopClick}>삭제하기</DeleteButton>
           </div>
         )}
       </div>

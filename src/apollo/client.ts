@@ -7,6 +7,8 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { authTokenVar } from "./vars";
 import { createUploadLink } from "apollo-upload-client";
 
+//const HTTP_ENDPOINT = `https://nomadcoffee.herokuapp.com/graphql`;
+//const WS_ENDPOINT = `wss://nomadcoffee.herokuapp.com/graphql`;
 const HTTP_ENDPOINT = `https://nomadcoffee.herokuapp.com/graphql`;
 const WS_ENDPOINT = `wss://nomadcoffee.herokuapp.com/graphql`;
 
@@ -53,5 +55,11 @@ const splitLink = split(
 
 export const apolloClient = new ApolloClient({
   link: splitLink,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Category: {
+        keyFields: (obj) => `Category:${obj.slug}`,
+      },
+    },
+  }),
 });

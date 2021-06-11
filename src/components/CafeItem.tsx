@@ -128,7 +128,7 @@ const MapContainer = styled.div`
 
 export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
   const kakao = window.kakao;
-  console.log(shop);
+
   return (
     <>
       <PhotoItemWrapper>
@@ -139,6 +139,7 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
           <AvatarAndUsername
             url={shop.user?.avatarURL}
             size="lg"
+            id={shop.user?.id!}
             username={shop.user?.username!}
             email={shop.user?.email}
             linkable

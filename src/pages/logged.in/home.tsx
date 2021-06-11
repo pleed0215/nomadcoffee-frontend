@@ -19,8 +19,7 @@ const Container = styled(LayoutContainer)`
 `;
 
 export const HomePage = () => {
-  const { data, loading, refetch } =
-    useQuery<AllShops, AllShopsVariables>(QUERY_SHOPS);
+  const { data, loading } = useQuery<AllShops, AllShopsVariables>(QUERY_SHOPS);
 
   return (
     <Container>

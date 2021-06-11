@@ -91,6 +91,7 @@ export const MUTATION_EDIT_SHOP = gql`
     $address: String
     $lat: Float
     $lng: Float
+    $photos: [Upload]
   ) {
     editCoffeeShop(
       id: $id
@@ -98,6 +99,7 @@ export const MUTATION_EDIT_SHOP = gql`
       address: $address
       lat: $lat
       lng: $lng
+      photos: $photos
     ) {
       ok
       error
@@ -117,6 +119,15 @@ export const MUTATION_ADD_CATEGORY_TO_SHOP = gql`
 export const MUTATION_REMOVE_CATEGORY_FROM_SHOP = gql`
   mutation RemoveCategory($id: Int!, $slug: String!) {
     removeCategoryFromShop(id: $id, slug: $slug) {
+      ok
+      error
+    }
+  }
+`;
+
+export const MUTATION_REMOVE_PHOTO_FROM_SHOP = gql`
+  mutation RemovePhoto($id: Int!, $photoId: Int!) {
+    removePhotoFromShop(id: $id, photoId: $photoId) {
       ok
       error
     }
