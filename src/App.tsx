@@ -11,6 +11,7 @@ import { LoggedOutRouter } from "./router/logged.out";
 
 const Container = styled.div`
   width: 100vw;
+  min-width: 400px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,10 +27,10 @@ function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
+      <GlobalStyles />
       <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
         <HelmetProvider>
           <Helmet></Helmet>
-          <GlobalStyles />
           <Container>
             {isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />}
           </Container>
