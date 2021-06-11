@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 
 import styled, { keyframes } from "styled-components";
-import { darkModeVar, makeLogin } from "../../apollo/vars";
+import { makeLogin } from "../../apollo/vars";
 import { ReactComponent as CoffeeBean } from "../../assets/bean.svg";
 import {
   CreateAccount,
@@ -90,9 +90,7 @@ const InputBox = styled.div<{ isCreating?: boolean }>`
   min-width: 350px;
   max-width: 450px;
   min-height: ${(props) => (props.isCreating ? "490px" : "350px")};
-  background-color: ${darkModeVar()
-    ? "rgba(140, 140, 140, 0.8)"
-    : "rgba(240, 240, 240, 0.8)"};
+  background-color: rgba(140, 140, 140, 0.8);
   animation: ${fadeIn} 0.9s linear;
   margin-top: 24px;
   border-radius: 10px;
@@ -202,9 +200,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ isCreating }) => {
   };
 
   useEffect(() => {
-    reset(defaultValues);
+    reset({ username: "", email: "", password: "", password2: "" });
     setError(null);
-  }, [isCreating]);
+  }, [isCreating, reset]);
 
   return (
     <Container>
@@ -239,7 +237,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ isCreating }) => {
               rules={{
                 required: { value: true, message: "이메일을 입력해주세요." },
                 pattern: {
-                  value: /\w+\@\w+\.\w+/g,
+                  value: /\w+@\w+\.\w+/g,
                   message: "올바른 이메일 주소를 입력해주세요.",
                 },
                 minLength: { value: 4, message: "4글자 이상 필요해요." },

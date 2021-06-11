@@ -537,7 +537,7 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
         })
       );
     }
-  }, [daum, kakao]);
+  }, [daum, kakao, address]);
 
   useEffect(() => {
     if (editing && shop) {
