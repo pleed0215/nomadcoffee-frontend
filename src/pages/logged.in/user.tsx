@@ -18,6 +18,7 @@ import { LayoutContainer } from "../../components/LayoutContainer";
 import { PageLoader } from "../../components/Loader";
 import { ToggleFollows } from "../../components/ToggleFollow";
 import { useMe } from "../../hooks/useMe";
+import { device } from "../../theme/theme";
 
 const QUERY_USER = gql`
   query SeeUser($id: Int!) {
@@ -59,6 +60,10 @@ const ProfileContainer = styled.div`
   justify-content: start;
   width: 100%;
   position: relative;
+  ${device.xs} {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const AvatarContainer = styled.button`
@@ -74,6 +79,10 @@ const UserContentContainer = styled.div`
   flex-direction: column;
   justify-content: start;
   width: 100%;
+  ${device.xs} {
+    margin-top: 8px;
+    align-items: center;
+  }
 `;
 
 const UsernameContainer = styled.div`
