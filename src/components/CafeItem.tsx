@@ -34,13 +34,6 @@ const Photo = styled.div<{ url?: string }>`
   background-image: url(${(props) => props.url});
 `;
 
-const PhotoContentContainer = styled.div`
-  width: 300px;
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -80,8 +73,16 @@ const ContentArea = styled.div`
   height: 100%;
   max-width: 300px;
   min-height: 600px;
+  max-height: 600px;
   padding-top: 8px;
   background-color: ${(props) => props.theme.background.primary};
+  /* 스크롤바 감추기 */
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  overflow-y: scroll;
 `;
 
 const CategoryContainer = styled.div`
@@ -125,7 +126,22 @@ const MapContainer = styled.div`
   border-top: 1px solid ${(props) => props.theme.color.border};
   border-bottom: 1px solid ${(props) => props.theme.color.border};
 `;
-
+const PhotoContentContainer = styled.div`
+  width: 300px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  ${device.xs} {
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    /* 스크롤바 감추기 */
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  overflow-x: scroll;
+`;
 const Thumbnail = styled.div<{ url?: string; selected?: boolean }>`
   width: 150px;
   height: 150px;
