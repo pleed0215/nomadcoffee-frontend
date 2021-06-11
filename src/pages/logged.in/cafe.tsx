@@ -16,6 +16,7 @@ import {
   MUTATION_EDIT_SHOP,
   MUTATION_REMOVE_CATEGORY_FROM_SHOP,
   MUTATION_REMOVE_PHOTO_FROM_SHOP,
+  QUERY_SEE_CAFE,
   QUERY_SHOPS,
 } from "../../apollo/queries";
 import { AllShop } from "../../codegen/AllShop";
@@ -300,7 +301,7 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     if (checkValid()) {
       setLoading(true);
       console.log("editing", editing);
-      if (editing) {
+      if (editing && shop) {
         editShop({
           // @ts-ignore
           variables: {
@@ -311,6 +312,14 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
             lng: +realAddress?.lng!,
             ...(fileList && fileList.length > 0 && { photos: fileList }),
           },
+          refetchQueries: [
+            {
+              query: QUERY_SEE_CAFE,
+              variables: {
+                id: shop.id!,
+              },
+            },
+          ],
         });
       } else {
         createShop({

@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 import { breakpoints, device } from "../theme/theme";
 
 import { AvatarAndUsername } from "./Avatar";
@@ -35,10 +35,10 @@ const Photo = styled.div<{ url?: string }>`
 `;
 
 const PhotoContentContainer = styled.div`
-  width: 100%;
+  width: 300px;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 `;
 
 const Header = styled.div`
@@ -80,7 +80,7 @@ const ContentArea = styled.div`
   height: 100%;
   max-width: 300px;
   min-height: 600px;
-  padding: 8px 0px;
+  padding-top: 8px;
   background-color: ${(props) => props.theme.background.primary};
 `;
 
@@ -121,13 +121,38 @@ const CategoryText = styled.span`
 
 const MapContainer = styled.div`
   width: 100%;
-  height: 250px;
+  height: 180px;
   border-top: 1px solid ${(props) => props.theme.color.border};
   border-bottom: 1px solid ${(props) => props.theme.color.border};
 `;
 
+const Thumbnail = styled.div<{ url?: string; selected?: boolean }>`
+  width: 150px;
+  height: 150px;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(${(props) => props.url});
+
+  cursor: pointer;
+  ${(props) =>
+    props.selected &&
+    css`
+      backdrop-filter: blur(10px);
+      opacity: 0.3;
+    `}
+`;
+
 export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
   const kakao = window.kakao;
+  const [photo, setPhoto] = useState(shop.firstPhotoUrl);
+
+  const onPhotoClick = (url: string) => (_: React.MouseEvent) => {
+    if (url === photo) {
+      setPhoto(shop.firstPhotoUrl);
+    } else {
+      setPhoto(url);
+    }
+  };
 
   return (
     <>
@@ -148,7 +173,7 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
         </Header>
         <Body>
           <PhotoArea>
-            <Photo url={shop.firstPhotoUrl!} />
+            <Photo url={photo!} />
           </PhotoArea>
           <ContentArea>
             <span style={{ paddingLeft: 8 }}>위치: {shop.address}</span>
@@ -173,9 +198,23 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
                 </CategoryContainer>
               ))}
             </Categories>
+            {shop.photos && shop.photos.length > 1 && (
+              <>
+                <p style={{ marginTop: 4, marginBottom: 8 }}>사진</p>
+                <PhotoContentContainer>
+                  {shop.photos.slice(1).map((p) => (
+                    <Thumbnail
+                      key={`Thumbnail:${p?.id}`}
+                      url={p?.url!}
+                      selected={p?.url === photo}
+                      onClick={onPhotoClick(p?.url!)}
+                    />
+                  ))}
+                </PhotoContentContainer>
+              </>
+            )}
           </ContentArea>
         </Body>
-        <PhotoContentContainer></PhotoContentContainer>
       </PhotoItemWrapper>
     </>
   );
