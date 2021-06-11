@@ -280,7 +280,7 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     }
 
     if (editing) {
-      if (shop?.photos?.length === 0 || !fileList || fileList.length === 0) {
+      if (shop?.photos?.length === 0 && (!fileList || fileList?.length === 0)) {
         messages.push("사진은 적어도 한 장 포함해주세요");
       }
     } else {
