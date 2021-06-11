@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { breakpoints, device } from "../theme/theme";
 
@@ -6,6 +6,7 @@ import { AvatarAndUsername } from "./Avatar";
 import { AllShop } from "../codegen/AllShop";
 import { Map, Marker } from "react-kakao-maps";
 import { Link } from "react-router-dom";
+import { CategoryItem } from "./CategoryItem";
 
 interface CafeItemProps {
   shop: AllShop;
@@ -85,27 +86,6 @@ const ContentArea = styled.div`
   overflow-y: scroll;
 `;
 
-const CategoryContainer = styled.div`
-  width: 100px;
-  height: 30px;
-  padding: 3px 5px;
-  background-color: ${(props) => props.theme.background.secondary};
-  color: ${(props) => props.theme.color.secondary};
-  font-size: 1rem;
-  border-radius: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
-  margin-top: 4px;
-  margin-bottom: 4px;
-`;
-
 const Categories = styled.div`
   width: 100%;
   display: flex;
@@ -114,10 +94,6 @@ const Categories = styled.div`
   margin-top: 8px;
   margin-bottom: 8px;
   padding: 0 8px;
-`;
-
-const CategoryText = styled.span`
-  margin-right: 5px;
 `;
 
 const MapContainer = styled.div`
@@ -170,6 +146,11 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
     }
   };
 
+  useEffect(() => {
+    console.log(shop);
+    console.log(shop.categories);
+  }, [shop.categories, shop]);
+
   return (
     <>
       <PhotoItemWrapper>
@@ -207,11 +188,13 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
               </Map>
             </MapContainer>
             <p style={{ paddingLeft: 8, marginTop: 8 }}>카테고리</p>
+
             <Categories>
               {shop.categories?.map((category) => (
-                <CategoryContainer key={`Shop:${shop.id}-${category?.slug}`}>
-                  <CategoryText>{category?.slug}</CategoryText>
-                </CategoryContainer>
+                <CategoryItem
+                  key={`Shop:${shop.id}-${category?.slug}`}
+                  slug={category?.slug!}
+                />
               ))}
             </Categories>
             {shop.photos && shop.photos.length > 1 && (

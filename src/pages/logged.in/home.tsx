@@ -28,7 +28,7 @@ export const HomePage = () => {
       {!loading &&
         data &&
         data.seeCoffeeShops?.map((shop) => (
-          <CafeItem shop={shop!} key={shop?.id} />
+          <CafeItem shop={shop!} key={`Shop:${shop?.id}`} />
         ))}
     </Container>
   );
