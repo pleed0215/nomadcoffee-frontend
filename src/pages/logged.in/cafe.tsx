@@ -278,8 +278,15 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
     if (!realAddress) {
       messages.push("주소 정보가 필요합니다. 확인해주세요.");
     }
-    if (!fileList || fileList.length === 0) {
-      messages.push("사진은 적어도 한 장 포함해주세요");
+
+    if (editing) {
+      if (shop?.photos?.length === 0 || !fileList || fileList.length === 0) {
+        messages.push("사진은 적어도 한 장 포함해주세요");
+      }
+    } else {
+      if (!fileList || fileList.length === 0) {
+        messages.push("사진은 적어도 한 장 포함해주세요");
+      }
     }
     if (fileList && fileList.length > 5) {
       messages.push("사진이 너무 많습니다. 5장까지 가능합니다.");
