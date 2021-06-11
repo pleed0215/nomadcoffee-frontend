@@ -35,7 +35,7 @@ export const darkTheme: DefaultTheme = {
 
 // W3School.com 기준 5단계 breakpoint
 export const breakpoints = {
-  xs: "500px",
+  xs: "400px",
   sm: "600px",
   md: "768px",
   lg: "992px",
