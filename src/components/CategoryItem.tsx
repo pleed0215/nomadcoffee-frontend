@@ -101,7 +101,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
           <CategoryText>{slug}</CategoryText>
         </CategoryContainer>
       }
-      onOpen={() => getData()}
+      onOpen={getData}
     >
       {data && !loading && (
         <Container>
