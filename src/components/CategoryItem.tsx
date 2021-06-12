@@ -43,8 +43,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 8px;
-  background-color: ${(props) => props.theme.background.secondary};
-  color: ${(props) => props.theme.color.secondary};
+  background-color: ${(props) => props.theme.background.primary};
+  color: ${(props) => props.theme.color.primary};
   border: 1px solid ${(props) => props.theme.color.border};
   border-radius: 8px;
   overflow-y: scroll;
@@ -65,6 +65,11 @@ const CafeContainer = styled(Link)`
     margin-bottom: 4px;
   }
   outline: none;
+  padding: 0px 1px;
+  border-radius: 4px;
+  &:hover {
+    background-color: #BBB;
+  }
 `;
 
 const CafePhoto = styled.div<{ url: string }>`
@@ -87,7 +92,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
   >(QUERY_SEE_CATEGORY, { variables: { slug } });
   return (
     <Popup
-      on="hover"
+      on={["hover", "click"]}
       mouseEnterDelay={300}
       mouseLeaveDelay={500}
       position="left center"
@@ -101,7 +106,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
       {data && !loading && (
         <Container>
           <span style={{ textAlign: "center", marginBottom: 4 }}>
-            #{slug} 카테고리
+            #{slug}
           </span>
           {data.seeCategory?.map((shop) => (
             <CafeContainer
