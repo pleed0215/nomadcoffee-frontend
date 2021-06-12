@@ -2,9 +2,10 @@ import { useLazyQuery } from "@apollo/client";
 import React from "react";
 import Popup from "reactjs-popup";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+
 import { QUERY_SEE_CATEGORY } from "../apollo/queries";
 import { SeeCategory, SeeCategoryVariables } from "../codegen/SeeCategory";
+import { SmallCafeItem } from "./SmallCafeItem";
 
 type CategoryItemProps = {
   slug: string;
@@ -56,35 +57,6 @@ const Container = styled.div`
   scrollbar-width: none; /* Firefox */
 `;
 
-const CafeContainer = styled(Link)`
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  &:not(:last-child) {
-    margin-bottom: 4px;
-  }
-  outline: none;
-  padding: 0px 1px;
-  border-radius: 4px;
-  &:hover {
-    background-color: #bbb;
-  }
-`;
-
-const CafePhoto = styled.div<{ url: string }>`
-  width: 40px;
-  height: 40px;
-  margin-right: 4px;
-  background-image: url(${(props) => props.url});
-  background-size: cover;
-  background-position: center center;
-  border-radius: 4px;
-  border: 1px solid ${(props) => props.theme.color.border};
-`;
-
-const CafeName = styled.span``;
-
 export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
   const [getData, { data, loading }] = useLazyQuery<
     SeeCategory,
@@ -105,16 +77,18 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
     >
       {data && !loading && (
         <Container>
-          <span style={{ textAlign: "center", marginBottom: 4 }}>#{slug}</span>
-          {data.seeCategory?.map((shop) => (
-            <CafeContainer
-              to={`/shop/${shop?.id}`}
-              key={`Cat:${slug}-${shop?.id}`}
-            >
-              <CafePhoto url={shop?.firstPhotoUrl!} />
-              <CafeName>{shop?.name}</CafeName>
-            </CafeContainer>
-          ))}
+          <span style={{ textAlign: "center", marginBottom: 4 }}>
+            #{slug} / total: {data.seeCategory?.totalShops}
+          </span>
+          {data.seeCategory?.shops &&
+            data.seeCategory?.shops.map((shop) => (
+              <SmallCafeItem
+                key={`Cat:${slug}-${shop?.id}`}
+                id={shop?.id!}
+                name={shop?.name!}
+                url={shop?.firstPhotoUrl!}
+              />
+            ))}
         </Container>
       )}
     </Popup>

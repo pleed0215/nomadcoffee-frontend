@@ -137,7 +137,13 @@ export const MUTATION_REMOVE_PHOTO_FROM_SHOP = gql`
 export const QUERY_SEE_CATEGORY = gql`
   query SeeCategory($slug: String!) {
     seeCategory(slug: $slug) {
-      ...AllShop
+      id
+      name
+      slug
+      totalShops
+      shops {
+        ...AllShop
+      }
     }
   }
   ${ALL_SHOP}

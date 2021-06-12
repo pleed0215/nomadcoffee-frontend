@@ -6,6 +6,7 @@ import { NotFoundPage } from "../pages/404";
 import { AddOrEditPage } from "../pages/logged.in/cafe";
 import { ProfileEditPage } from "../pages/logged.in/edit.profile";
 import { HomePage } from "../pages/logged.in/home";
+import { SearchPage } from "../pages/logged.in/search";
 import { SeeCafePage } from "../pages/logged.in/shop";
 import { UserPage } from "../pages/logged.in/user";
 
@@ -37,6 +38,9 @@ export const LoggedInRouter = () => {
           </Route>
           <Route path="/users/:id" exact>
             <UserPage />
+          </Route>
+          <Route path="/search" exact>
+            <SearchPage />
           </Route>
           <Route path="/edit-me" exact>
             <ProfileEditPage />

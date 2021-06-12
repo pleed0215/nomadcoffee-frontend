@@ -590,7 +590,7 @@ export const AddOrEditPage: React.FC<AddOrEditProp> = ({
   return (
     <Container>
       <HelmetOnlyTitle title={editing ? "카페 편집" : "카페 만들기"} />
-      <Title>커피샵 만들기</Title>
+      <Title>{editing ? "편집하기" : "카페 만들기"}</Title>
       <StepText>1. 이름 정하기</StepText>
       <Input
         type="text"

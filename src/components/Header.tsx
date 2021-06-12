@@ -158,6 +158,8 @@ const AvatarMenuItem = styled.div`
   &:first-child {
     margin-right: 10px;
   }
+  margin-top: 4px;
+  margin-bottom: 4px;
 `;
 
 const AvatarMenuItemIcon = styled(FontAwesomeIcon)`
@@ -292,19 +294,25 @@ export const Header: React.FC = () => {
             />
             {menuVisible && (
               <AvatarMenuWrapper visible={menuVisible} ref={menu}>
-                <Link to={`/users/${me?.me?.id}`}>
-                  <AvatarMenuItem>
+                <AvatarMenuItem>
+                  <Link to={`/users/${me?.me?.id}`}>
                     <AvatarMenuItemIcon icon={faUserCircle} size="lg" />
                     <SpanAvatarMenuItem>프로필</SpanAvatarMenuItem>
-                  </AvatarMenuItem>
-                </Link>
+                  </Link>
+                </AvatarMenuItem>
                 <AvatarMenuSeperator />
-                <Link to={`/add`}>
-                  <AvatarMenuItem>
+                <AvatarMenuItem>
+                  <Link to={`/add`}>
                     <AvatarMenuItemIcon icon={faPlusSquare} size="lg" />
                     <SpanAvatarMenuItem>커피샵 만들기</SpanAvatarMenuItem>
-                  </AvatarMenuItem>
-                </Link>
+                  </Link>
+                </AvatarMenuItem>
+                <AvatarMenuItem>
+                  <Link to={`/search`}>
+                    <AvatarMenuItemIcon icon={faSearch} size="lg" />
+                    <SpanAvatarMenuItem>검색하기</SpanAvatarMenuItem>
+                  </Link>
+                </AvatarMenuItem>
                 <AvatarMenuSeperator />
                 <AvatarMenuItem
                   onClick={() => {

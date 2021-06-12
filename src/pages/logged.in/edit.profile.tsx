@@ -75,7 +75,7 @@ const TabContainer = styled.div`
   flex-direction: column;
   background-color: ${(props) => props.theme.background.primary};
   width: 300px;
-  min-height: 50vh;
+  min-height: 500px;
   border: 1px solid ${(props) => props.theme.color.border};
   border-right: none;
 `;
@@ -104,7 +104,7 @@ const TabContent = styled.div`
   border: 1px solid ${(props) => props.theme.color.border};
   border-left: none;
   background-color: ${(props) => props.theme.background.secondary};
-  min-height: 50vh;
+  min-height: 500px;
   padding: 10px;
 `;
 
@@ -157,7 +157,7 @@ const PasswordEdit: React.FC<{ me: SeeMe_me }> = ({ me }) => {
 
   return (
     <Form onSubmit={handleSubmit(onValid)}>
-      <HelmetOnlyTitle title="Update Profile" />
+      <HelmetOnlyTitle title="프로필 수정" />
       <InputContainer>
         <ControlledInput
           control={control}

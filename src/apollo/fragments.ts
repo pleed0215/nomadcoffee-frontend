@@ -29,6 +29,15 @@ export const ALL_SHOP = gql`
   }
 `;
 
+export const PART_SHOP = gql`
+  fragment PartShop on CoffeeShop {
+    id
+    name
+    firstPhotoUrl
+    isMine
+  }
+`;
+
 export const PART_USER = gql`
   fragment PartUser on User {
     id
@@ -56,4 +65,17 @@ export const ALL_USER = gql`
     isMe
     location
   }
+`;
+
+export const ALL_CATEGORY = gql`
+  fragment AllCategory on Category {
+    id
+    name
+    slug
+    totalShops
+    shops {
+      ...AllShop
+    }
+  }
+  ${ALL_SHOP}
 `;
