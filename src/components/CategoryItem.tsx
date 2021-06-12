@@ -68,7 +68,7 @@ const CafeContainer = styled(Link)`
   padding: 0px 1px;
   border-radius: 4px;
   &:hover {
-    background-color: #BBB;
+    background-color: #bbb;
   }
 `;
 
@@ -95,7 +95,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
       on={["hover", "click"]}
       mouseEnterDelay={300}
       mouseLeaveDelay={500}
-      position="left center"
+      position={["left center", "bottom center"]}
       trigger={
         <CategoryContainer>
           <CategoryText>{slug}</CategoryText>
@@ -105,9 +105,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ slug }) => {
     >
       {data && !loading && (
         <Container>
-          <span style={{ textAlign: "center", marginBottom: 4 }}>
-            #{slug}
-          </span>
+          <span style={{ textAlign: "center", marginBottom: 4 }}>#{slug}</span>
           {data.seeCategory?.map((shop) => (
             <CafeContainer
               to={`/shop/${shop?.id}`}
