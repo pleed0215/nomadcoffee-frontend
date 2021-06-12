@@ -113,10 +113,11 @@ const PhotoContentContainer = styled.div`
     ::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera*/
     }
+    
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-  }
   overflow-x: scroll;
+  }
 `;
 const Thumbnail = styled.div<{ url?: string; selected?: boolean }>`
   width: 150px;
