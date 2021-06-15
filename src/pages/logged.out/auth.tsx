@@ -312,6 +312,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ isCreating }) => {
               😀 아직 회원 아니시면,<SLink to="/">가입하기</SLink> 😀
             </BottomText>
           )}
+          <BottomText style={{ fontSize: "1.5rem" }}>
+            또는{" "}
+            <SLink to="/home" style={{ textDecoration: "underline" }}>
+              둘러보기
+            </SLink>
+          </BottomText>
         </InputForm>
       </InputBox>
     </Container>

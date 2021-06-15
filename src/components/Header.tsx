@@ -14,7 +14,12 @@ import { faPlusSquare as farPlusSquare } from "@fortawesome/free-regular-svg-ico
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { darkModeVar, makeLogout, setDarkMode } from "../apollo/vars";
+import {
+  authTokenVar,
+  darkModeVar,
+  makeLogout,
+  setDarkMode,
+} from "../apollo/vars";
 import { useMe } from "../hooks/useMe";
 import { device } from "../theme/theme";
 import { Avatar } from "./Avatar";
@@ -186,6 +191,7 @@ export const Header: React.FC = () => {
   const [term, setTerm] = useState("");
   const [menuVisible, setMenuVisible] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
+  const isLoggedIn = useReactiveVar(authTokenVar);
 
   const [clickedMenu, setClickedMenu] = useState(0);
   const onDarkModeChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -260,12 +266,14 @@ export const Header: React.FC = () => {
           />
         </SearchContainer>
         <MenuContainer>
-          <MenuLink to="/add" onClick={onMenuClicked(0)}>
-            <IconMenu
-              icon={clickedMenu === 0 ? faPlusSquare : farPlusSquare}
-              size="lg"
-            />
-          </MenuLink>
+          {isLoggedIn && (
+            <MenuLink to="/add" onClick={onMenuClicked(0)}>
+              <IconMenu
+                icon={clickedMenu === 0 ? faPlusSquare : farPlusSquare}
+                size="lg"
+              />
+            </MenuLink>
+          )}
           {/*
           <MenuLink to="/direct" onClick={onMenuClicked(1)}>
             <IconMenu
@@ -280,52 +288,54 @@ export const Header: React.FC = () => {
             />
           </MenuLink>*/}
 
-          <AvatarWrapper
-            onClick={() => {
-              onMenuClicked(3)();
-              onToggleMenu();
-            }}
-            onBlur={() => seedMenuCloseTimer()}
-          >
-            <Avatar
-              url={me?.me?.avatarURL}
-              size="lg"
-              outline={clickedMenu === 3}
-            />
-            {menuVisible && (
-              <AvatarMenuWrapper visible={menuVisible} ref={menu}>
-                <AvatarMenuItem>
-                  <Link to={`/users/${me?.me?.id}`}>
-                    <AvatarMenuItemIcon icon={faUserCircle} size="lg" />
-                    <SpanAvatarMenuItem>프로필</SpanAvatarMenuItem>
-                  </Link>
-                </AvatarMenuItem>
-                <AvatarMenuSeperator />
-                <AvatarMenuItem>
-                  <Link to={`/add`}>
-                    <AvatarMenuItemIcon icon={faPlusSquare} size="lg" />
-                    <SpanAvatarMenuItem>커피샵 만들기</SpanAvatarMenuItem>
-                  </Link>
-                </AvatarMenuItem>
-                <AvatarMenuItem>
-                  <Link to={`/search`}>
-                    <AvatarMenuItemIcon icon={faSearch} size="lg" />
-                    <SpanAvatarMenuItem>검색하기</SpanAvatarMenuItem>
-                  </Link>
-                </AvatarMenuItem>
-                <AvatarMenuSeperator />
-                <AvatarMenuItem
-                  onClick={() => {
-                    makeLogout();
-                    history.push("/");
-                  }}
-                >
-                  <AvatarMenuItemIcon icon={faSignOutAlt} size="lg" />
-                  <SpanAvatarMenuItem>로그아웃</SpanAvatarMenuItem>
-                </AvatarMenuItem>
-              </AvatarMenuWrapper>
-            )}
-          </AvatarWrapper>
+          {isLoggedIn && (
+            <AvatarWrapper
+              onClick={() => {
+                onMenuClicked(3)();
+                onToggleMenu();
+              }}
+              onBlur={() => seedMenuCloseTimer()}
+            >
+              <Avatar
+                url={me?.me?.avatarURL}
+                size="lg"
+                outline={clickedMenu === 3}
+              />
+              {menuVisible && (
+                <AvatarMenuWrapper visible={menuVisible} ref={menu}>
+                  <AvatarMenuItem>
+                    <Link to={`/users/${me?.me?.id}`}>
+                      <AvatarMenuItemIcon icon={faUserCircle} size="lg" />
+                      <SpanAvatarMenuItem>프로필</SpanAvatarMenuItem>
+                    </Link>
+                  </AvatarMenuItem>
+                  <AvatarMenuSeperator />
+                  <AvatarMenuItem>
+                    <Link to={`/add`}>
+                      <AvatarMenuItemIcon icon={faPlusSquare} size="lg" />
+                      <SpanAvatarMenuItem>커피샵 만들기</SpanAvatarMenuItem>
+                    </Link>
+                  </AvatarMenuItem>
+                  <AvatarMenuItem>
+                    <Link to={`/search`}>
+                      <AvatarMenuItemIcon icon={faSearch} size="lg" />
+                      <SpanAvatarMenuItem>검색하기</SpanAvatarMenuItem>
+                    </Link>
+                  </AvatarMenuItem>
+                  <AvatarMenuSeperator />
+                  <AvatarMenuItem
+                    onClick={() => {
+                      makeLogout();
+                      history.push("/");
+                    }}
+                  >
+                    <AvatarMenuItemIcon icon={faSignOutAlt} size="lg" />
+                    <SpanAvatarMenuItem>로그아웃</SpanAvatarMenuItem>
+                  </AvatarMenuItem>
+                </AvatarMenuWrapper>
+              )}
+            </AvatarWrapper>
+          )}
 
           <ToggleDarkContainer>
             <IconSun icon={isDark ? faMoon : faSun} />

@@ -1,9 +1,10 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ALL_SHOP, ALL_USER } from "../../apollo/fragments";
+import { authTokenVar } from "../../apollo/vars";
 import { MyShops, MyShopsVariables } from "../../codegen/MyShops";
 import { SeeUser, SeeUserVariables } from "../../codegen/SeeUser";
 import {
@@ -150,6 +151,7 @@ export const UserPage = () => {
   const [seeMenu, setSeeMenu] = useState(false);
   const avatarMenu = useRef<HTMLButtonElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const isLoggedIn = useReactiveVar(authTokenVar);
 
   const { data: me, loading: meLoading } = useMe();
   const { data, loading } = useQuery<SeeUser, SeeUserVariables>(QUERY_USER, {
@@ -211,7 +213,7 @@ export const UserPage = () => {
     return (
       <>
         {(loading || meLoading || shopsLoading) && <PageLoader />}
-        {data && me && shops && (
+        {data && shops && (
           <Container>
             <HelmetOnlyTitle title={`${user.username}'s page`} />
             <ProfileContainer>
@@ -241,7 +243,7 @@ export const UserPage = () => {
                       프로필 편집
                     </ButtonEditProfile>
                   )}
-                  {!user.isMe && (
+                  {!user.isMe && isLoggedIn && (
                     <div style={{ minWidth: 100 }}>
                       <ToggleFollows
                         isFollowing={user.isFollowing!}

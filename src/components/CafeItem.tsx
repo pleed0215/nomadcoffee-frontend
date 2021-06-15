@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { breakpoints, device } from "../theme/theme";
 
@@ -113,10 +113,10 @@ const PhotoContentContainer = styled.div`
     ::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera*/
     }
-    
+
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-  overflow-x: scroll;
+    overflow-x: scroll;
   }
 `;
 const Thumbnail = styled.div<{ url?: string; selected?: boolean }>`
@@ -146,11 +146,6 @@ export const CafeItem: React.FC<CafeItemProps> = ({ shop }) => {
       setPhoto(url);
     }
   };
-
-  useEffect(() => {
-    console.log(shop);
-    console.log(shop.categories);
-  }, [shop.categories, shop]);
 
   return (
     <>
