@@ -41,10 +41,10 @@ export const HomePage = () => {
   const { data, loading, fetchMore } = useQuery<AllShops, AllShopsVariables>(
     QUERY_SHOPS
   );
-  const rootRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isBottomIntersection = useIntersectionObserver(
-    rootRef,
-    { rootMargin: "0px 0px 110px 0px", threshold: 0.8 },
+    ref,
+    { threshold: 0 },
     false
   );
 
@@ -65,7 +65,7 @@ export const HomePage = () => {
   }, [isBottomIntersection, data, fetchMore]);
 
   return (
-    <Container ref={rootRef}>
+    <Container>
       <HelmetOnlyTitle title="Home" />
       {loading && <PageLoader />}
       {!loading &&
@@ -73,6 +73,7 @@ export const HomePage = () => {
         data.seeCoffeeShops?.map((shop) => (
           <CafeItem shop={shop!} key={`Shop:${shop?.id}`} />
         ))}
+      <div ref={ref} style={{ width: "100%", height: "20px" }} />
     </Container>
   );
 };
