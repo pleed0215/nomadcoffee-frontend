@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, split } from "@apollo/client";
+import { ApolloClient, split } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { onError } from "@apollo/client/link/error";
 import { setContext } from "@apollo/client/link/context";
@@ -6,6 +6,7 @@ import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { authTokenVar } from "./vars";
 import { createUploadLink } from "apollo-upload-client";
+import { apolloCache } from "./cache";
 
 //const HTTP_ENDPOINT = `https://nomadcoffee.herokuapp.com/graphql`;
 //const WS_ENDPOINT = `wss://nomadcoffee.herokuapp.com/graphql`;
@@ -55,11 +56,5 @@ const splitLink = split(
 
 export const apolloClient = new ApolloClient({
   link: splitLink,
-  cache: new InMemoryCache({
-    typePolicies: {
-      Category: {
-        keyFields: (obj) => `Category:${obj.slug}`,
-      },
-    },
-  }),
+  cache: apolloCache,
 });

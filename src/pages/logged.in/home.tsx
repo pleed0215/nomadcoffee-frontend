@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 
-import { LayoutContainer } from "../../components/LayoutContainer";
 import { PageLoader } from "../../components/Loader";
 import { AllShops, AllShopsVariables } from "../../codegen/AllShops";
 import { HelmetOnlyTitle } from "../../components/HelmetOnlyTitle";
-import { device } from "../../theme/theme";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { breakpoints, device } from "../../theme/theme";
 import { QUERY_SHOPS } from "../../apollo/queries";
 import { CafeItem } from "../../components/CafeItem";
 
-const Container = styled(LayoutContainer)`
+const Container = styled.div`
+  ${device.xs} {
+    min-width: ${breakpoints.xs};
+  }
+  ${device.sm} {
+    max-width: ${breakpoints.sm};
+  }
+  ${device.md} {
+    max-width: ${breakpoints.md};
+  }
+  ${device.lg} {
+    max-width: ${breakpoints.lg};
+  }
+  /*@media ${device.xl} {
+    max-width: ${breakpoints.xl};
+  }*/
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+
   flex-direction: column;
   ${device.xs} {
     padding-left: 5px;
@@ -19,10 +38,34 @@ const Container = styled(LayoutContainer)`
 `;
 
 export const HomePage = () => {
-  const { data, loading } = useQuery<AllShops, AllShopsVariables>(QUERY_SHOPS);
+  const { data, loading, fetchMore } = useQuery<AllShops, AllShopsVariables>(
+    QUERY_SHOPS
+  );
+  const rootRef = useRef<HTMLDivElement>(null);
+  const isBottomIntersection = useIntersectionObserver(
+    rootRef,
+    { rootMargin: "0px 0px 110px 0px", threshold: 0.8 },
+    false
+  );
+
+  useEffect(() => {
+    if (isBottomIntersection && data) {
+      const length = data.seeCoffeeShops?.length ?? 0;
+      const moreFetch = async (lastId: number) => {
+        await fetchMore({
+          variables: {
+            lastId,
+          },
+        });
+      };
+      if (length > 0 && data.seeCoffeeShops) {
+        moreFetch(data.seeCoffeeShops[length - 1]?.id!);
+      }
+    }
+  }, [isBottomIntersection, data, fetchMore]);
 
   return (
-    <Container>
+    <Container ref={rootRef}>
       <HelmetOnlyTitle title="Home" />
       {loading && <PageLoader />}
       {!loading &&
